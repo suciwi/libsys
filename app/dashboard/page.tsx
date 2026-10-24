@@ -1,105 +1,76 @@
 "use client";
-
-
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
-export default function LoginPage() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
-  const [message, setMessage] = useState("");
+export default function DashboardPage() {
   const router = useRouter();
+  const [isLoading, setIsLoading] = useState(true);
 
-  function handleLogin(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
+  useEffect(() => {
+    // Mengecek apakah pengguna sudah punya tiket masuk (token) dari proses login
+    const token = localStorage.getItem("token");
+    if (!token) {
+      // Kalau belum login, kembalikan ke halaman login
+      router.push("/login");
+    } else {
+      setIsLoading(false);
+    }
+  }, [router]);
 
-    setMessage(
-      "Login berhasil! Mengalihkan ke Dashboard..."
-    );
+  function handleLogout() {
+    // Hapus tiket masuk dan kembali ke halaman login
+    localStorage.removeItem("token");
+    router.push("/login");
+  }
 
-    // Otomatis pindah ke halaman dashboard setelah 1 detik
-    setTimeout(() => {
-      router.push('/dashboard');
-    }, 1000);
+  if (isLoading) {
+    return <p style={{ padding: "50px", textAlign: "center" }}>Memuat dashboard...</p>;
   }
 
   return (
-    <main className="auth-page">
-      <nav className="auth-nav">
-        <Link href="/" className="auth-brand">
-          📚 LibSys
-        </Link>
-
-        <Link href="/" className="auth-home">
-          ← Kembali ke Beranda
-        </Link>
+    <main style={{ padding: "40px", fontFamily: "sans-serif", backgroundColor: "#f7f5ed", minHeight: "100vh" }}>
+      <nav style={{ display: "flex", justifyItems: "center", justifyContent: "space-between", marginBottom: "40px" }}>
+        <h1 style={{ color: "#315c40", margin: 0 }}>📚 Dashboard LibSys</h1>
+        <button
+          onClick={handleLogout}
+          style={{ padding: "10px 20px", backgroundColor: "#d9534f", color: "white", border: "none", borderRadius: "8px", cursor: "pointer", fontWeight: "bold" }}
+        >
+          Keluar (Logout)
+        </button>
       </nav>
 
-      <section className="auth-card">
-        <div className="auth-icon">📖</div>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))", gap: "20px" }}>
+        {/* Kotak Info 1 */}
+        <div style={{ backgroundColor: "white", padding: "20px", borderRadius: "12px", boxShadow: "0 4px 6px rgba(0,0,0,0.05)" }}>
+          <h2 style={{ color: "#66816b", fontSize: "14px", marginTop: 0 }}>TOTAL BUKU</h2>
+          <p style={{ fontSize: "36px", fontWeight: "bold", margin: "10px 0", color: "#263b2d" }}>124</p>
+        </div>
+        
+        {/* Kotak Info 2 */}
+        <div style={{ backgroundColor: "white", padding: "20px", borderRadius: "12px", boxShadow: "0 4px 6px rgba(0,0,0,0.05)" }}>
+          <h2 style={{ color: "#66816b", fontSize: "14px", marginTop: 0 }}>BUKU DIPINJAM</h2>
+          <p style={{ fontSize: "36px", fontWeight: "bold", margin: "10px 0", color: "#263b2d" }}>12</p>
+        </div>
+        
+        {/* Kotak Info 3 */}
+        <div style={{ backgroundColor: "white", padding: "20px", borderRadius: "12px", boxShadow: "0 4px 6px rgba(0,0,0,0.05)" }}>
+          <h2 style={{ color: "#66816b", fontSize: "14px", marginTop: 0 }}>ANGGOTA AKTIF</h2>
+          <p style={{ fontSize: "36px", fontWeight: "bold", margin: "10px 0", color: "#263b2d" }}>45</p>
+        </div>
+      </div>
 
-        <p className="auth-eyebrow">SELAMAT DATANG KEMBALI</p>
-
-        <h1>Login ke LibSys</h1>
-
-        <p className="auth-description">
-          Masuk ke akunmu dan jelajahi koleksi buku perpustakaan.
+      <div style={{ marginTop: "40px", backgroundColor: "white", padding: "30px", borderRadius: "12px", boxShadow: "0 4px 6px rgba(0,0,0,0.05)" }}>
+        <h2 style={{ color: "#315c40", marginBottom: "20px" }}>Selamat Datang di Panel Kontrol</h2>
+        <p style={{ color: "#777d74", lineHeight: "1.6" }}>
+          Ini adalah halaman MVP Dashboard. Karena kamu sudah berhasil login dan mendapatkan akses dari backend, kamu bisa melihat halaman ini. 
+          Nantinya, di sini pustakawan bisa melihat daftar peminjam, menambah buku baru, dan menyetujui pengembalian buku.
         </p>
-
-        <form onSubmit={handleLogin} className="auth-form">
-          <label htmlFor="email">Email</label>
-
-          <input
-            id="email"
-            type="email"
-            placeholder="nama@email.com"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
-
-          <label htmlFor="password">Password</label>
-
-          <input
-            id="password"
-            type={showPassword ? "text" : "password"}
-            placeholder="Masukkan password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-
-          <label className="auth-show-password">
-            <input
-              type="checkbox"
-              checked={showPassword}
-              onChange={(e) => setShowPassword(e.target.checked)}
-            />
-            Tampilkan password
-          </label>
-
-          <button type="submit" className="auth-button">
-            Login
-          </button>
-
-          {message && (
-            <p className="auth-message" role="status" style={{ marginTop: '10px', color: '#059669', fontWeight: 'bold' }}>
-              {message}
-            </p>
-          )}
-        </form>
-
-        <p className="auth-switch">
-          Belum punya akun?{" "}
-          <Link href="/register">Daftar sekarang</Link>
-        </p>
-      </section>
-
-      <footer className="auth-footer">
-        © 2026 LibSys — Sistem Informasi Perpustakaan
-      </footer>
+        <br/>
+        <Link href="/" style={{ color: "#315c40", fontWeight: "bold", textDecoration: "none" }}>
+          ← Kembali lihat Katalog Utama
+        </Link>
+      </div>
     </main>
   );
 }
