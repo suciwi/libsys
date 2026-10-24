@@ -1,108 +1,81 @@
 "use client";
-
-import "./globals.css";
-
-import Link from "next/link";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 export default function LoginPage() {
+  const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
-  const [message, setMessage] = useState("");
-  
-  // Ini dia baris yang bikin router-nya nggak merah lagi!
-  const router = useRouter();
+  const [errorMsg, setErrorMsg] = useState("");
 
-  function handleLogin(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
+  const handleLogin = async (e: React.FormEvent) => {
+    e.preventDefault(); 
+    setErrorMsg("");
 
-    setMessage(
-      "Login berhasil! Mengalihkan ke Dashboard..."
-    );
+    try {
+      const response = await fetch("http://localhost:8000/api/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      });
 
-    // Otomatis pindah ke halaman dashboard setelah 1 detik
-    setTimeout(() => {
-      window.location.href = '/dashboard';
-    }, 1000);
-  }
+      if (response.ok) {
+        const data = await response.json();
+        localStorage.setItem("token", data.access_token);
+        router.push("/dashboard"); 
+      } else {
+        setErrorMsg("Email atau password salah nih, coba lagi ya!");
+      }
+    } catch (err) {
+      setErrorMsg("Dapur (Backend) belum merespon. Pastikan terminal uvicorn menyala.");
+    }
+  };
 
   return (
-    <main className="auth-page">
-      <nav className="auth-nav">
-        <Link href="/" className="auth-brand">
-          📚 LibSys
-        </Link>
+    <main style={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyItems: "center", justifyContent: "center", backgroundColor: "#f7f5ed" }}>
+      <div style={{ backgroundColor: "white", padding: "40px", borderRadius: "12px", boxShadow: "0 4px 6px rgba(0,0,0,0.1)", width: "100%", maxWidth: "400px" }}>
+        <h1 style={{ color: "#315c40", textAlign: "center", marginBottom: "20px" }}>Masuk ke LibSys</h1>
+        
+        {errorMsg && (
+          <p style={{ color: "#d9534f", backgroundColor: "#fdf7f7", padding: "10px", borderRadius: "8px", textAlign: "center", fontSize: "14px" }}>
+            {errorMsg}
+          </p>
+        )}
 
-        <Link href="/" className="auth-home">
-          ← Kembali ke Beranda
-        </Link>
-      </nav>
-
-      <section className="auth-card">
-        <div className="auth-icon">📖</div>
-
-        <p className="auth-eyebrow">SELAMAT DATANG KEMBALI</p>
-
-        <h1>Login ke LibSys</h1>
-
-        <p className="auth-description">
-          Masuk ke akunmu dan jelajahi koleksi buku perpustakaan.
-        </p>
-
-        <form onSubmit={handleLogin} className="auth-form">
-          <label htmlFor="email">Email</label>
-
-          <input
-            id="email"
-            type="email"
-            placeholder="nama@email.com"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
-
-          <label htmlFor="password">Password</label>
-
-          <input
-            id="password"
-            type={showPassword ? "text" : "password"}
-            placeholder="Masukkan password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-
-          <label className="auth-show-password">
-            <input
-              type="checkbox"
-              checked={showPassword}
-              onChange={(e) => setShowPassword(e.target.checked)}
+        <form onSubmit={handleLogin} style={{ display: "flex", flexDirection: "column", gap: "15px" }}>
+          <div>
+            <label style={{ display: "block", marginBottom: "5px", color: "#66816b", fontSize: "14px" }}>Email</label>
+            <input 
+              type="email" 
+              value={email} 
+              onChange={(e) => setEmail(e.target.value)} 
+              style={{ width: "95%", padding: "10px", borderRadius: "8px", border: "1px solid #ccc" }}
+              required 
             />
-            Tampilkan password
-          </label>
-
-          <button type="submit" className="auth-button">
-            Login
+          </div>
+          <div>
+            <label style={{ display: "block", marginBottom: "5px", color: "#66816b", fontSize: "14px" }}>Kata Sandi</label>
+            <input 
+              type="password" 
+              value={password} 
+              onChange={(e) => setPassword(e.target.value)} 
+              style={{ width: "95%", padding: "10px", borderRadius: "8px", border: "1px solid #ccc" }}
+              required 
+            />
+          </div>
+          <button 
+            type="submit" 
+            style={{ marginTop: "10px", padding: "12px", backgroundColor: "#315c40", color: "white", border: "none", borderRadius: "8px", cursor: "pointer", fontWeight: "bold", fontSize: "16px" }}
+          >
+            Masuk
           </button>
-
-          {message && (
-            <p className="auth-message" role="status">
-              {message}
-            </p>
-          )}
         </form>
 
-        <p className="auth-switch">
-          Belum punya akun?{" "}
-          <Link href="/register">Daftar sekarang</Link>
+        <p style={{ textAlign: "center", marginTop: "20px", fontSize: "14px", color: "#66816b" }}>
+          Belum punya akun? <Link href="/register" style={{ color: "#315c40", fontWeight: "bold", textDecoration: "none" }}>Daftar di sini</Link>
         </p>
-      </section>
-
-      <footer className="auth-footer">
-        © 2026 LibSys — Sistem Informasi Perpustakaan
-      </footer>
+      </div>
     </main>
   );
 }
