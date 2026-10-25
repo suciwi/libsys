@@ -1,0 +1,169 @@
+/* ===== DESAIN HALAMAN LOGIN ===== */
+
+.auth-page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: #f7f5ed;
+  color: #263b2d;
+}
+
+.auth-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 22px 7%;
+  border-bottom: 1px solid #e5e3d8;
+}
+
+.auth-brand {
+  color: #315c40;
+  font-size: 25px;
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.auth-home {
+  color: #315c40;
+  font-size: 14px;
+  text-decoration: none;
+}
+
+.auth-card {
+  width: min(420px, 88%);
+  box-sizing: border-box;
+  margin: 45px auto;
+  padding: 34px;
+}
+
+.auth-icon {
+  display: grid;
+  place-items: center;
+  width: 58px;
+  height: 58px;
+  margin: 0 auto 18px;
+  border-radius: 16px;
+  background: #eaf1e8;
+  font-size: 28px;
+}
+
+.auth-eyebrow {
+  color: #66816b;
+  text-align: center;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+}
+
+.auth-card h1 {
+  margin: 12px 0;
+  text-align: center;
+  font-size: 28px;
+}
+
+.auth-description {
+  margin-bottom: 26px;
+  color: #777d74;
+  text-align: center;
+  font-size: 14px;
+  line-height: 1.7;
+}
+
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.auth-form > label:not(.auth-show-password) {
+  margin-top: 8px;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.auth-form > input {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 13px;
+  border: 1px solid #d9ded5;
+  border-radius: 9px;
+  font-size: 14px;
+  outline: none;
+}
+
+.auth-form > input:focus {
+  border-color: #477653;
+  box-shadow: 0 0 0 3px rgba(71, 118, 83, 0.12);
+}
+
+.auth-show-password {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #5d665d;
+  font-size: 13px;
+}
+
+.auth-show-password input {
+  accent-color: #315c40;
+}
+
+.auth-button {
+  margin-top: 12px;
+  padding: 14px;
+  border: none;
+  border-radius: 9px;
+  background: #315c40;
+  color: white;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.auth-button:hover {
+  background: #244832;
+}
+
+.auth-message {
+  padding: 12px;
+  border-radius: 8px;
+  background: #edf4e9;
+  color: #315c40;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.auth-switch {
+  margin-top: 24px;
+  text-align: center;
+  color: #777d74;
+  font-size: 14px;
+}
+
+.auth-switch a {
+  color: #315c40;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.auth-footer {
+  margin-top: auto;
+  padding: 20px;
+  color: #7b8077;
+  text-align: center;
+  font-size: 12px;
+}
+
+@media (max-width: 480px) {
+  .auth-nav {
+    padding: 18px 5%;
+  }
+
+  .auth-card {
+    padding: 25px 20px;
+    margin: 30px auto;
+  }
+}
+
+
+
